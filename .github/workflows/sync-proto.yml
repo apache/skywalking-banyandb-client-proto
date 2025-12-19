@@ -1,0 +1,89 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Sync Proto Files
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch or tag to sync from'
+        required: false
+        default: 'main'
+        type: string
+
+jobs:
+  sync-proto:
+    name: Sync Proto Files from Upstream
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      
+      - name: Sync proto files
+        id: sync
+        run: |
+          BRANCH="${{ github.event.inputs.branch || 'main' }}"
+          echo "Syncing proto files from branch: $BRANCH"
+          python3 scripts/sync_proto.py --branch "$BRANCH" --force
+          
+          # Check if there are any changes
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Proto files have been updated"
+            git status --short
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          fi
+      
+      - name: Create Pull Request
+        if: steps.sync.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync proto files from upstream"
+          title: "chore: Sync proto files from upstream"
+          body: |
+            This PR automatically syncs proto files from the Apache SkyWalking BanyanDB repository.
+            
+            **Source branch:** `${{ github.event.inputs.branch || 'main' }}`
+            
+            Please review the changes and merge if they look correct.
+          branch: sync-proto-files
+          delete-branch: true
+          labels: |
+            automated
+            proto-sync
+          draft: false
+

@@ -1,0 +1,10 @@
+# Generated Java files
+target/generated-sources/**/*.java
+target/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cursor
+.cursor/
