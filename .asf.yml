@@ -16,7 +16,7 @@
 #
 
 github:
-  description: BanyanDB public client Protocol Buffer / gRPC definitions
+  description: BanyanDB public client Protocol Buffer and gRPC definitions
   homepage: https://skywalking.apache.org/
   labels:
     - skywalking
