@@ -47,6 +47,7 @@ MODULES = {
     'common': {'files': 'all'},
     'database': {'files': ['schema.proto', 'rpc.proto']},
     'measure': {'files': 'all'},
+    'bydbql': {'files': ['query.proto', 'rpc.proto']},
     'model': {'files': 'all'},
     'property': {'files': ['property.proto', 'rpc.proto']},
     'stream': {'files': 'all'},
@@ -67,6 +68,10 @@ EXCLUDE_LIST = {
     'measure': {
         'messages': ['DeleteExpiredSegmentsRequest', 'DeleteExpiredSegmentsResponse', 'InternalWriteRequest'],
         'rpcs': ['DeleteExpiredSegments']
+    },
+    'bydbql': {
+        'messages': [],
+        'rpcs': []
     },
     'model': {
         'messages': [],
