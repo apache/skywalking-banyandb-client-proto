@@ -45,7 +45,7 @@ class Colors:
 # Configuration: Module mapping
 MODULES = {
     'common': {'files': 'all'},
-    'database': {'files': ['schema.proto', 'rpc.proto']},
+    'database': {'files': ['database.proto', 'schema.proto', 'rpc.proto']},
     'measure': {'files': 'all'},
     'bydbql': {'files': ['query.proto', 'rpc.proto']},
     'model': {'files': 'all'},

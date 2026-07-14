@@ -46,6 +46,16 @@ message Node {
   string property_schema_gossip_grpc_address = 9;
 }
 
+message Shard {
+  uint64 id = 1;
+  common.v1.Metadata metadata = 2;
+  common.v1.Catalog catalog = 3;
+  string node = 4;
+  uint32 total = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
 enum TagType {
   TAG_TYPE_UNSPECIFIED = 0;
   TAG_TYPE_STRING = 1;
@@ -730,6 +740,8 @@ message ShardInfo {
   InvertedIndexInfo inverted_index_info = 5;
   // sidx_info contains information about sidx.
   SIDXInfo sidx_info = 6;
+  // file_part_count is the number of file parts (excluding in-memory parts) in this shard.
+  int64 file_part_count = 7;
 }
 
 // SeriesIndexInfo contains information about the series index.
