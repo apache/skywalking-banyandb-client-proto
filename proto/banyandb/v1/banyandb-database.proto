@@ -26,6 +26,36 @@ import "validate/validate.proto";
 import "banyandb/v1/banyandb-common.proto";
 import "banyandb/v1/banyandb-model.proto";
 
+enum Role {
+  ROLE_UNSPECIFIED = 0;
+  ROLE_META = 1;
+  ROLE_DATA = 2;
+  ROLE_LIAISON = 3;
+}
+
+message Node {
+  common.v1.Metadata metadata = 1;
+  repeated Role roles = 2;
+  string grpc_address = 3;
+  string http_address = 4;
+  google.protobuf.Timestamp created_at = 5;
+  // labels is a set of key-value pairs to describe the node.
+  map<string, string> labels = 6;
+  string property_repair_gossip_grpc_address = 7;
+  string property_schema_grpc_address = 8;
+  string property_schema_gossip_grpc_address = 9;
+}
+
+message Shard {
+  uint64 id = 1;
+  common.v1.Metadata metadata = 2;
+  common.v1.Catalog catalog = 3;
+  string node = 4;
+  uint32 total = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
 enum TagType {
   TAG_TYPE_UNSPECIFIED = 0;
   TAG_TYPE_STRING = 1;
