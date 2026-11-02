@@ -36,7 +36,19 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <protobuf.version>4.28.3</protobuf.version>
+        <guava.version>33.7.2-jre</guava.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- protobuf-java-util (via pgv-java-stub) pulls guava 32.0.0-jre, which carries GHSA-xxph-c9ww-hj94 -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
